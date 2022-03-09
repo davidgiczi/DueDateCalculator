@@ -1,30 +1,29 @@
 package com.david.zsombok.duedatecalculator.domain;
 
 import javax.management.InvalidAttributeValueException;
-
 import com.david.zsombok.duedatecalculator.enums.Day;
 import com.david.zsombok.duedatecalculator.enums.Month;
 import com.david.zsombok.duedatecalculator.enums.PartOfDay;
 
 public class DueDateCalculator {
 
-	private int inputYear;
-	private Month inputMonth;
-	private int inputDayOfMonth;
-	private Day inputDayName;
-	private int inputHour;
-	private int inputMinute;
-	private PartOfDay partOfDay;
-	private int turnAroundTime;
-	
+	private Date inputDate;
+	private Date outputDate;
+	public static final int WORKING_HOURS = 8;
+	public static final int START_OF_WORKING_DAY = 9;
+	public static final int MIDDLE_OF_WORKING_DAY = 12;
+	public static final int END_OF_WORKING_DAY = 5;
 	
 	public String calculateDueDate(int inputYear, Month inputMonth, int inputDayOfMonth, 
-			Day inputDayName, int inputHour, int inputMinute, PartOfDay partOfDay, int turnAroundTime) {
+			Day inputDayName, int inputHour, int inputMinute, PartOfDay partOfDay, int turnAroundTime) 
+					throws InvalidAttributeValueException {
 		
+		inputDate = new Date();
 		if(isValidInputValue(inputYear, inputMonth, inputDayOfMonth, inputDayName, 
 				inputHour, inputMinute, partOfDay, turnAroundTime)) {
-			return calculate(inputYear, inputMonth, inputDayOfMonth, inputDayName, 
-					inputHour, inputMinute, partOfDay, turnAroundTime);
+			System.out.println(getDateAsString(inputDate));
+			calculate();
+			return getDateAsString(outputDate);
 		}
 		
 		return "";
@@ -34,14 +33,14 @@ public class DueDateCalculator {
 			Day inputDayName, int inputHour, int inputMinute, PartOfDay partOfDay, int turnAroundTime) {
 		
 		try {
-			setInputYear(inputYear);
-			setInputMonth(inputMonth);
-			setInputDayOfMonth(inputDayOfMonth);
-			setInputDayName(inputDayName);
-			setInputMinute(inputMinute);
-			setPartOfDay(partOfDay);
-			setInputHour(inputHour);
-			setTurnAroundTime(turnAroundTime);
+			inputDate.setYear(inputYear);
+			inputDate.setMonth(inputMonth);
+			inputDate.setDayOfMonth(inputDayOfMonth);
+			inputDate.setDayName(inputDayName);
+			inputDate.setMinute(inputMinute);
+			inputDate.setPartOfDay(partOfDay);
+			inputDate.setHour(inputHour);
+			inputDate.setTurnAroundTime(turnAroundTime);
 			
 		} catch (InvalidAttributeValueException e) {
 			e.printStackTrace();
@@ -52,116 +51,59 @@ public class DueDateCalculator {
 	}
 	
 	
-	private String calculate(int inputYear, Month inputMonth, int inputDayOfMonth, 
-			Day inputDayName, int inputHour, int inputMinute, PartOfDay partOfDay, int turnAroundTime) {
+	private Date calculate() throws InvalidAttributeValueException {
 		
+		outputDate = new Date();
+		incrementHour();
 		
-		
-		return inputYear + " " + inputMonth + " "
-		+ (inputDayOfMonth < 10 ? "0"+inputDayOfMonth : inputDayOfMonth)
-		+ " " + inputDayName + " " + inputHour + ":" 
-		+ (inputMinute < 10 ? "0" + inputMinute : inputMinute) + partOfDay;
+		return outputDate;
 	}
 	
+	private void incrementHour() throws InvalidAttributeValueException {
 	
-	
-	
-	public int getInputYear() {
-		return inputYear;
-	}
-	public void setInputYear(int inputYear) throws InvalidAttributeValueException {
+		int HOURS = inputDate.getTurnAroundTime() % WORKING_HOURS;
+		int hoursInMinute = 60 * HOURS + inputDate.getMinute();
+		int startOfWorkingDayInMinute = 60 * START_OF_WORKING_DAY;
+		int middleOfWorkingDayInMinute = 60 * MIDDLE_OF_WORKING_DAY;
+		int endOfWorkingDayInMinute = 60 * END_OF_WORKING_DAY;
 		
-		if(Year.isValidYear(inputYear)) {
-		this.inputYear = inputYear;
-	}
-		else {
-			throw new InvalidAttributeValueException("The input Year value is not a valid value: " + inputYear 
-					+ ", should be: 0 < Year value");
-		}
-	}
-	
-	public Month getInputMonth() {
-		return inputMonth;
-	}
-	public void setInputMonth(Month inputMonth) {
-		this.inputMonth = inputMonth;
-	}
-	
-	public int getInputDayOfMonth() {
-		return inputDayOfMonth;
-	}
-
-	public void setInputDayOfMonth(int inputDayOfMonth) throws InvalidAttributeValueException {
+		outputDate.setYear(inputDate.getYear());
+		outputDate.setMonth(inputDate.getMonth());
 		
-		if(Month.isValidDayOfMonth(inputYear, inputMonth, inputDayOfMonth)) {
-			this.inputDayOfMonth = inputDayOfMonth;
+		if(inputDate.getPartOfDay() == PartOfDay.AM && middleOfWorkingDayInMinute - startOfWorkingDayInMinute - hoursInMinute >= 0) {
+			
+			outputDate.setDayOfMonth(inputDate.getDayOfMonth());
+			outputDate.setDayName(inputDate.getDayName());
+			outputDate.setPartOfDay(inputDate.getPartOfDay());
+			outputDate.setHour(START_OF_WORKING_DAY + HOURS);
+			outputDate.setMinute(inputDate.getMinute());
 		}
-		else {
-			throw new InvalidAttributeValueException("The input Day of Month value is not a valid value: " + inputDayOfMonth 
-					+ ", should be: 0 < Day of Month value <= " + Month.getDaysOfMonthByMonthName(inputYear, inputMonth));
+		else if(inputDate.getPartOfDay() == PartOfDay.AM && endOfWorkingDayInMinute - hoursInMinute < 0) {
+			
+			outputDate.setDayOfMonth(inputDate.getDayOfMonth());
+			outputDate.setDayName(inputDate.getDayName());
+			outputDate.setPartOfDay(PartOfDay.PM);
+			outputDate.setHour(START_OF_WORKING_DAY - MIDDLE_OF_WORKING_DAY + HOURS);
+			outputDate.setMinute(inputDate.getMinute());	
+		}
+		else if(inputDate.getPartOfDay() == PartOfDay.PM && endOfWorkingDayInMinute - hoursInMinute > 0) {
+			
+			outputDate.setDayOfMonth(inputDate.getDayOfMonth());
+			outputDate.setDayName(inputDate.getDayName());
+			outputDate.setPartOfDay(PartOfDay.PM);
+			//outputDate.setHour();
+			outputDate.setMinute(inputDate.getMinute());	
 		}
 		
-	}
 
-	public Day getInputDayName() {
-		return inputDayName;
-	}
-
-
-	public void setInputDayName(Day inputDayName) {
-		this.inputDayName = inputDayName;
 	}
 	
-	public int getInputHour() {
-		return inputHour;
-	}
-	public void setInputHour(int inputHour) throws InvalidAttributeValueException {
-		
-		if(HourMinute.isValidHour(inputHour) && HourMinute.isValidWorkingHour(inputHour,  inputMinute, partOfDay)) {
-			this.inputHour = inputHour;
-		}
-		else {
-			throw new InvalidAttributeValueException("The input Hour value is not a valid value: " + inputHour + partOfDay 
-					+ ", should be: 8AM <= Hour value <= 5PM" );
-		}
-	}
-	public int getInputMinute() {
-		return inputMinute;
-	}
-	public void setInputMinute(int inputMinute) throws InvalidAttributeValueException {
-		
-		if(HourMinute.isValidMinute(inputMinute)) {
-			this.inputMinute = inputMinute;
-		}
-		else {
-			throw new InvalidAttributeValueException("The input Minute value is not a valid value: " + inputMinute + 
-					", should be: 0 <= Minute value <= 59");
-		}
-	}
-	
-	public PartOfDay getPartOfDay() {
-		return partOfDay;
-	}
 
-
-	public void setPartOfDay(PartOfDay partOfDay) {
-		this.partOfDay = partOfDay;
-	}
-
-
-	public int getTurnAroundTime() {
-		return turnAroundTime;
-	}
-	public void setTurnAroundTime(int turnAroundTime) throws InvalidAttributeValueException {
-		
-		if( turnAroundTime > 0 ) {
-			this.turnAroundTime = turnAroundTime;
-		}
-		else {
-			throw new InvalidAttributeValueException("The input Turnaround Time value is not a valid value: " + turnAroundTime + 
-					", should be: 0 < Turnaround value");
-		}
-		
+	private String getDateAsString(Date date) {
+	return	date.getYear() + " " + date.getMonth() + " "
+				+ (date.getDayOfMonth() < 10 ? "0"+date.getDayOfMonth() : date.getDayOfMonth())
+				+ " " + date.getDayName() + " " + date.getHour() + ":" 
+				+ (date.getMinute() < 10 ? "0" + date.getMinute() : date.getMinute()) + date.getPartOfDay();
 	}
 	
 }

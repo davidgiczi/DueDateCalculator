@@ -7,17 +7,19 @@ public class HourMinute {
 	
 	public static boolean isValidWorkingHour(int hourValue, int minuteValue, PartOfDay partOfDay) {
 		
-		if(hourValue >= 9 &&  12 > hourValue && partOfDay == PartOfDay.AM) {
+		if(hourValue >= DueDateCalculator.START_OF_WORKING_DAY &&  
+				DueDateCalculator.MIDDLE_OF_WORKING_DAY > hourValue && partOfDay == PartOfDay.AM) {
 			return true;
 		}
-		else if(hourValue == 12 && isValidMinute(minuteValue) && partOfDay == PartOfDay.PM){
+		else if(hourValue == DueDateCalculator.MIDDLE_OF_WORKING_DAY && 
+				isValidMinute(minuteValue) && partOfDay == PartOfDay.PM){
 			return true;
 		}
-		else if(hourValue > 0 &&  5 > hourValue && partOfDay == PartOfDay.PM) {
+		else if(hourValue > 0 &&  DueDateCalculator.END_OF_WORKING_DAY > hourValue && partOfDay == PartOfDay.PM) {
 			return true;
 		}
-		else if(hourValue == 5 &&  minuteValue == 0 && partOfDay == PartOfDay.PM) {
-			return true;
+		else if(hourValue == DueDateCalculator.END_OF_WORKING_DAY &&  minuteValue == 0 && partOfDay == PartOfDay.PM) {
+			return false;
 		}
 		
 		return false;
