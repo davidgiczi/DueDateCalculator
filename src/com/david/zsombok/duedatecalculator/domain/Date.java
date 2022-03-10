@@ -28,7 +28,7 @@ public class Date {
 		this.year = year;
 	}
 		else {
-			throw new InvalidAttributeValueException("The input Year value is not a valid value: " + year 
+			throw new InvalidAttributeValueException("The Year value is not a valid value: " + year 
 					+ ", should be: 0 < Year value");
 		}
 	}
@@ -50,7 +50,7 @@ public class Date {
 			this.dayOfMonth = dayOfMonth;
 		}
 		else {
-			throw new InvalidAttributeValueException("The input Day of Month value is not a valid value: " + dayOfMonth 
+			throw new InvalidAttributeValueException("The Day of Month value is not a valid value: " + dayOfMonth 
 					+ ", should be: 0 < Day of Month value <= " + Month.getDaysOfMonthByMonthName(year, month));
 		}
 		
@@ -74,7 +74,7 @@ public class Date {
 			this.hour = hour;
 		}
 		else {
-			throw new InvalidAttributeValueException("The input Hour value is not a valid value: " + hour + partOfDay 
+			throw new InvalidAttributeValueException("The Hour value is not a valid value: " + hour + partOfDay 
 					+ ", should be: 8AM <= Hour value < 5PM" );
 		}
 	}
@@ -87,7 +87,7 @@ public class Date {
 			this.minute = minute;
 		}
 		else {
-			throw new InvalidAttributeValueException("The input Minute value is not a valid value: " + minute + 
+			throw new InvalidAttributeValueException("The Minute value is not a valid value: " + minute + 
 					", should be: 0 <= Minute value <= 59");
 		}
 	}
@@ -111,7 +111,7 @@ public class Date {
 			this.turnAroundTime = turnAroundTime;
 		}
 		else {
-			throw new InvalidAttributeValueException("The input Turnaround Time value is not a valid value: " + turnAroundTime + 
+			throw new InvalidAttributeValueException("The Turnaround Time value is not a valid value: " + turnAroundTime + 
 					", should be: 0 < Turnaround value");
 		}
 		
