@@ -11,7 +11,7 @@ public class Date {
 	private int year;
 	private Month month;
 	private int dayOfMonth;
-	private Day dayName;
+	private Day day;
 	private int hour;
 	private int minute;
 	private PartOfDay partOfDay;
@@ -56,13 +56,19 @@ public class Date {
 		
 	}
 
-	public Day getDayName() {
-		return dayName;
+	public Day getDay() {
+		return day;
 	}
 
-
-	public void setDayName(Day dayName) {
-		this.dayName = dayName;
+	public void setDay(Day day) throws InvalidAttributeValueException {
+		
+		if(day != Day.SAT && day != Day.SUN) {
+			this.day = day;
+		}
+		else {
+			throw new InvalidAttributeValueException("The Day value is not a valid value: " + day
+					+ ", should be: MON or TUE or WED or THU or FRI" );
+		}
 	}
 	
 	public int getHour() {

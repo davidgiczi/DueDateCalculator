@@ -7,18 +7,18 @@ public class HourMinute {
 	
 	public static boolean isValidWorkingHour(int hourValue, int minuteValue, PartOfDay partOfDay) {
 		
-		if(hourValue >= DueDateCalculator.START_OF_WORKING_DAY_HOUR &&  
-				DueDateCalculator.MIDDLE_OF_WORKING_DAY_HOUR > hourValue && partOfDay == PartOfDay.AM) {
+		if(hourValue >= DueDateCalculator.START_OF_WORKING_DAY_IN_HOUR &&  
+				DueDateCalculator.MIDDLE_OF_WORKING_DAY_IN_HOUR > hourValue && partOfDay == PartOfDay.AM) {
 			return true;
 		}
-		else if(hourValue == DueDateCalculator.MIDDLE_OF_WORKING_DAY_HOUR && 
+		else if(hourValue == DueDateCalculator.MIDDLE_OF_WORKING_DAY_IN_HOUR && 
 				isValidMinute(minuteValue) && partOfDay == PartOfDay.PM){
 			return true;
 		}
-		else if(hourValue > 0 &&  DueDateCalculator.END_OF_WORKING_DAY_HOUR > hourValue && partOfDay == PartOfDay.PM) {
+		else if(hourValue > 0 &&  5 > hourValue && partOfDay == PartOfDay.PM) {
 			return true;
 		}
-		else if(hourValue == DueDateCalculator.END_OF_WORKING_DAY_HOUR &&  minuteValue == 0 && partOfDay == PartOfDay.PM) {
+		else if(hourValue == 5 &&  minuteValue == 0 && partOfDay == PartOfDay.PM) {
 			return false;
 		}
 		
@@ -32,4 +32,6 @@ public class HourMinute {
 	public static boolean isValidHour(int hour) {
 		return hour >= 0 && 12 >= hour;
 	}
+	
+	
 }
