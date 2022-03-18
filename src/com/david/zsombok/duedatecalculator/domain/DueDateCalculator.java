@@ -12,8 +12,6 @@ public class DueDateCalculator {
 	public static final int WORKING_HOURS = 8;
 	public static final int START_OF_WORKING_DAY_IN_HOUR= 9;
 	public static final int MIDDLE_OF_WORKING_DAY_IN_HOUR= 12;
-	public static final int END_OF_WORKING_DAY_IN_HOUR = 17;
-	public static final int ONE_DAY_IN_HOUR = 24;
 	
 	public String calculateDueDate(int inputYear, Month inputMonth, int inputDayOfMonth, 
 			Day inputDay, int inputHour, int inputMinute, PartOfDay partOfDay, int turnAroundTime) 
@@ -50,39 +48,65 @@ public class DueDateCalculator {
 		
 		return true;
 	}
-	
-	
-	private Date calculate() throws InvalidAttributeValueException {
 		
+	private Date calculate() throws InvalidAttributeValueException {
+			
 		outputDate = new Date();
-		//incrementDay();
-		addResidualHour();
+		int DAYS = inputDate.getTurnAroundTime() / WORKING_HOURS;
+	
+		for(int i = 0; i < DAYS; i++) {
+			int year = inputDate.getYear();
+			Month month = inputDate.getMonth();
+			int dayOfMonth = inputDate.getDayOfMonth();
+			incrementDay(year, month, dayOfMonth);
+		}
+		
+		outputDate.setYear(inputDate.getYear());
+		outputDate.setMonth(inputDate.getMonth());
+		outputDate.setDayOfMonth(inputDate.getDayOfMonth());
+		outputDate.setDay(inputDate.getDay());
+		outputDate.setPartOfDay(inputDate.getPartOfDay());
+		outputDate.setHour(inputDate.getHour());
+		outputDate.setMinute(inputDate.getMinute());
+		
+		//addResidualHour();
 		
 		return outputDate;
 	}
 	
-	private void incrementDay() throws InvalidAttributeValueException {
+	private void incrementDay(int year, Month month, int dayOfMonth) throws InvalidAttributeValueException {
 		
-		int DAYS = inputDate.getTurnAroundTime() / WORKING_HOURS;
-		int dayOfMonthCounter = inputDate.getDayOfMonth();
-		
-		for(int i = 1; i <= DAYS; i++) {
-			
-				
+		if( inputDate.getMonth() == Month.DEC && inputDate.getDayOfMonth() == 31 && inputDate.getDay() != Day.FRI ) {
+			year += 1;
+		}
+		else if( inputDate.getDay() == Day.FRI && inputDate.getMonth() == Month.DEC && inputDate.getDayOfMonth() > 28 ) {
+			year += 1;
 		}
 		
+		if( inputDate.getDay() == Day.FRI ) {
+			dayOfMonth += 3;
+		}
+		else {
+			dayOfMonth += 1;
+		}
+		
+		if( dayOfMonth > Month.getDaysOfMonthByMonthName(inputDate.getYear(), inputDate.getMonth()) ) {
+			month = Month.getNextMonth(inputDate.getMonth());
+			dayOfMonth = dayOfMonth - Month.getDaysOfMonthByMonthName(inputDate.getYear(), inputDate.getMonth());
+		}
+		else {
+			month = inputDate.getMonth();
+		}
+		inputDate.setYear(year);
+		inputDate.setDayOfMonth(dayOfMonth);
+		inputDate.setMonth(month);
+		inputDate.setDay(Day.getNextWorkDay(inputDate.getDay()));
 	}
 	
-	private void addResidualHour() throws InvalidAttributeValueException {
-	
-		int HOURS = inputDate.getTurnAroundTime() % WORKING_HOURS;
-		int hourCounter = inputDate.getHour();
+	private void addResidualHour() throws InvalidAttributeValueException { 
 		
-		for(int i = 1; i <= HOURS; i++) {
-			
-			
-			
-		}
+		int HOURS = inputDate.getTurnAroundTime() % WORKING_HOURS;
+
 	}
 	
 	private String getDateAsString(Date date) {

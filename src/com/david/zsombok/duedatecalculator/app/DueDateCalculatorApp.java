@@ -12,7 +12,7 @@ public class DueDateCalculatorApp {
 	public static void main(String[] args) throws InvalidAttributeValueException {
 	
 		DueDateCalculator dueDateCalculator = new DueDateCalculator();
-		String dueDate = dueDateCalculator.calculateDueDate(2022, Month.JAN, 1, Day.MON, 1, 32, PartOfDay.PM, 5);
+		String dueDate = dueDateCalculator.calculateDueDate(2022, Month.MAR, 18, Day.FRI, 2, 56, PartOfDay.PM, 88);
 		System.out.println("OUTPUT: " + dueDate);
 	}
 	
