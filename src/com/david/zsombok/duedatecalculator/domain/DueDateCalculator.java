@@ -12,6 +12,7 @@ public class DueDateCalculator {
 	public static final int WORKING_HOURS = 8;
 	public static final int START_OF_WORKING_DAY_IN_HOUR= 9;
 	public static final int MIDDLE_OF_WORKING_DAY_IN_HOUR= 12;
+	public static final int END_OF_WORKING_DAY_IN_HOUR= 17;
 	
 	public String calculateDueDate(int inputYear, Month inputMonth, int inputDayOfMonth, 
 			Day inputDay, int inputHour, int inputMinute, PartOfDay partOfDay, int turnAroundTime) 
@@ -20,7 +21,7 @@ public class DueDateCalculator {
 		inputDate = new Date();
 		if(isValidInputDateValue(inputYear, inputMonth, inputDayOfMonth, inputDay, 
 				inputHour, inputMinute, partOfDay, turnAroundTime)) {
-			System.out.println("INPUT: " + getDateAsString(inputDate) + ", TurnAround: " + inputDate.getTurnAroundTime() + " HOUR" );
+			System.out.println("INPUT: " + getDateAsString(inputDate) + ", TURNAROUND: " + inputDate.getTurnAroundTime() + " Hour" );
 			calculate();
 			return getDateAsString(outputDate);
 		}
@@ -53,12 +54,17 @@ public class DueDateCalculator {
 			
 		outputDate = new Date();
 		int DAYS = inputDate.getTurnAroundTime() / WORKING_HOURS;
-	
+		
 		for(int i = 0; i < DAYS; i++) {
 			int year = inputDate.getYear();
 			Month month = inputDate.getMonth();
 			int dayOfMonth = inputDate.getDayOfMonth();
 			incrementDay(year, month, dayOfMonth);
+		}
+		
+		int HOURS = inputDate.getTurnAroundTime() % WORKING_HOURS;
+		for(int i = 0; i < HOURS; i++) {
+			addResidualHour();	
 		}
 		
 		outputDate.setYear(inputDate.getYear());
@@ -69,8 +75,6 @@ public class DueDateCalculator {
 		outputDate.setHour(inputDate.getHour());
 		outputDate.setMinute(inputDate.getMinute());
 		
-		//addResidualHour();
-		
 		return outputDate;
 	}
 	
@@ -79,7 +83,7 @@ public class DueDateCalculator {
 		if( inputDate.getMonth() == Month.DEC && inputDate.getDayOfMonth() == 31 && inputDate.getDay() != Day.FRI ) {
 			year += 1;
 		}
-		else if( inputDate.getDay() == Day.FRI && inputDate.getMonth() == Month.DEC && inputDate.getDayOfMonth() > 28 ) {
+		else if( inputDate.getMonth() == Month.DEC && inputDate.getDayOfMonth() > 28 && inputDate.getDay() == Day.FRI ) {
 			year += 1;
 		}
 		
@@ -105,8 +109,53 @@ public class DueDateCalculator {
 	
 	private void addResidualHour() throws InvalidAttributeValueException { 
 		
-		int HOURS = inputDate.getTurnAroundTime() % WORKING_HOURS;
-
+		int eventTimePlusOneHourInMinutes = 60 * (inputDate.getHour() + 1) + inputDate.getMinute();
+		
+		if( eventTimePlusOneHourInMinutes < 60 * MIDDLE_OF_WORKING_DAY_IN_HOUR 
+				&& inputDate.getPartOfDay() == PartOfDay.AM ) {
+			
+			inputDate.setHour(inputDate.getHour() + 1);
+		}
+		else if( eventTimePlusOneHourInMinutes >= 60 * MIDDLE_OF_WORKING_DAY_IN_HOUR 
+				&& eventTimePlusOneHourInMinutes < 13 *60 
+				&& inputDate.getPartOfDay() == PartOfDay.AM ) {
+			
+			inputDate.setPartOfDay(PartOfDay.PM);
+			inputDate.setHour(inputDate.getHour() + 1);
+		}
+		else if( eventTimePlusOneHourInMinutes >= 13 * 60 
+				&& eventTimePlusOneHourInMinutes < END_OF_WORKING_DAY_IN_HOUR * 60 
+				&& inputDate.getPartOfDay() == PartOfDay.AM ) {
+			
+			inputDate.setPartOfDay(PartOfDay.PM);
+			inputDate.setHour(inputDate.getHour() + 1 - MIDDLE_OF_WORKING_DAY_IN_HOUR);
+		}
+		else if( eventTimePlusOneHourInMinutes >= 13 * 60 
+				&& eventTimePlusOneHourInMinutes < END_OF_WORKING_DAY_IN_HOUR * 60 
+				&& inputDate.getPartOfDay() == PartOfDay.PM ) {
+			
+			inputDate.setHour(inputDate.getHour() + 1 - MIDDLE_OF_WORKING_DAY_IN_HOUR);
+		}
+		else if( eventTimePlusOneHourInMinutes >= 60
+				&& eventTimePlusOneHourInMinutes < 5 * 60
+				&& inputDate.getPartOfDay() == PartOfDay.PM ) {
+			
+			inputDate.setHour(inputDate.getHour() + 1);
+		}
+		else if( eventTimePlusOneHourInMinutes >= 60
+				&& eventTimePlusOneHourInMinutes >= 5 * 60
+				&& inputDate.getPartOfDay() == PartOfDay.PM ) {
+				
+				int year = inputDate.getYear();
+				Month month = inputDate.getMonth();
+				int dayOfMonth = inputDate.getDayOfMonth();
+				incrementDay(year, month, dayOfMonth);
+				int residualHourForTomorrow = 4 - inputDate.getHour();
+				inputDate.setPartOfDay(residualHourForTomorrow < 3 ? PartOfDay.AM : PartOfDay.PM);
+				inputDate.setHour(residualHourForTomorrow < 4 ? 
+						START_OF_WORKING_DAY_IN_HOUR + residualHourForTomorrow : 
+						START_OF_WORKING_DAY_IN_HOUR + residualHourForTomorrow - MIDDLE_OF_WORKING_DAY_IN_HOUR);
+		}
 	}
 	
 	private String getDateAsString(Date date) {

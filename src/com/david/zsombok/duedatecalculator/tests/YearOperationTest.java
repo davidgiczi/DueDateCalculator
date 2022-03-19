@@ -26,22 +26,22 @@ public class YearOperationTest {
 	
 	@Test
 	void isLeapYearTest4(){
-		assertTrue("The year value must be higher than 1582, can be divisible by 4 and cannot be divisible by 100", Year.isLeapYear(1904));
+		assertTrue("The year value must be higher than 1582 and it can be divisible by 4 and cannot be divisible by 100", Year.isLeapYear(1904));
 	}
 	
 	@Test
 	void isLeapYearTest5(){
-		assertTrue("The year value must be higher than 1582, can be divisible by 4 and cannot be divisible by 100", Year.isLeapYear(1996));
+		assertTrue("The year value must be higher than 1582 and it can be divisible by 4 and cannot be divisible by 100", Year.isLeapYear(1996));
 	}
 	
 	@Test
 	void isLeapYearTest6(){
-		assertTrue("The year value must be higher than 1582, can be divisible by 400", Year.isLeapYear(2000));
+		assertTrue("The year value must be higher than 1582 and it can be divisible by 400", Year.isLeapYear(2000));
 	}
 	
 	@Test
 	void isLeapYearTest7(){
-		assertTrue("The year value must be higher than 1582, can be divisible by 4 and cannot be divisible by 100", Year.isLeapYear(2004));
+		assertTrue("The year value must be higher than 1582 and it can be divisible by 4 and cannot be divisible by 100", Year.isLeapYear(2004));
 	}
 	
 }

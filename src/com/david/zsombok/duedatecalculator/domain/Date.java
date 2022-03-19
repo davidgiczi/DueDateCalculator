@@ -1,7 +1,6 @@
 package com.david.zsombok.duedatecalculator.domain;
 
 import javax.management.InvalidAttributeValueException;
-
 import com.david.zsombok.duedatecalculator.enums.Day;
 import com.david.zsombok.duedatecalculator.enums.Month;
 import com.david.zsombok.duedatecalculator.enums.PartOfDay;
@@ -29,7 +28,7 @@ public class Date {
 	}
 		else {
 			throw new InvalidAttributeValueException("The Year value is not a valid value: " + year 
-					+ ", should be: 0 < Year value");
+					+ ", it should be: 0 < Year value");
 		}
 	}
 	
@@ -51,7 +50,7 @@ public class Date {
 		}
 		else {
 			throw new InvalidAttributeValueException("The Day of Month value is not a valid value: " + dayOfMonth 
-					+ ", should be: 0 < Day of Month value <= " + Month.getDaysOfMonthByMonthName(year, month));
+					+ ", it should be: 0 < Day of Month value <= " + Month.getDaysOfMonthByMonthName(year, month));
 		}
 		
 	}
@@ -67,7 +66,7 @@ public class Date {
 		}
 		else {
 			throw new InvalidAttributeValueException("The Day value is not a valid value: " + day
-					+ ", should be: MON or TUE or WED or THU or FRI" );
+					+ ", it should be: MON or TUE or WED or THU or FRI" );
 		}
 	}
 	
@@ -81,7 +80,7 @@ public class Date {
 		}
 		else {
 			throw new InvalidAttributeValueException("The Hour value is not a valid value: " + hour + partOfDay 
-					+ ", should be: 8AM <= Hour value < 5PM" );
+					+ ", it should be: 9AM <= Hour value <= 12PM or 1PM <= Hour value < 5PM" );
 		}
 	}
 	public int getMinute() {
@@ -94,7 +93,7 @@ public class Date {
 		}
 		else {
 			throw new InvalidAttributeValueException("The Minute value is not a valid value: " + minute + 
-					", should be: 0 <= Minute value <= 59");
+					", it should be: 0 <= Minute value <= 59");
 		}
 	}
 	
@@ -118,7 +117,7 @@ public class Date {
 		}
 		else {
 			throw new InvalidAttributeValueException("The Turnaround Time value is not a valid value: " + turnAroundTime + 
-					", should be: 0 < Turnaround value");
+					", it should be: 0 < Turnaround value");
 		}
 		
 	}

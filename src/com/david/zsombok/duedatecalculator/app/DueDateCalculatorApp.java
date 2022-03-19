@@ -10,10 +10,11 @@ import com.david.zsombok.duedatecalculator.enums.PartOfDay;
 public class DueDateCalculatorApp {
 
 	public static void main(String[] args) throws InvalidAttributeValueException {
-	
+		
+		final String ANSI_RED = "\033[0;31m";
 		DueDateCalculator dueDateCalculator = new DueDateCalculator();
-		String dueDate = dueDateCalculator.calculateDueDate(2022, Month.MAR, 18, Day.FRI, 2, 56, PartOfDay.PM, 88);
-		System.out.println("OUTPUT: " + dueDate);
+		String dueDate = dueDateCalculator.calculateDueDate(2022, Month.DEC, 31, Day.THU, 4, 55, PartOfDay.PM, 9);
+		System.out.println(ANSI_RED + "OUTPUT: " + dueDate);
 	}
 	
 }
