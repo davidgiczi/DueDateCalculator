@@ -117,7 +117,7 @@ public class Date {
 		}
 		else {
 			throw new InvalidAttributeValueException("The Turnaround Time value is not a valid value: " + turnAroundTime + 
-					", it should be: 0 < Turnaround value");
+					", it should be: 0 < Turnaround Time value");
 		}
 		
 	}

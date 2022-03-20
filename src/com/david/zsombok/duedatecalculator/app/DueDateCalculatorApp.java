@@ -1,7 +1,6 @@
 package com.david.zsombok.duedatecalculator.app;
 
 import javax.management.InvalidAttributeValueException;
-
 import com.david.zsombok.duedatecalculator.domain.DueDateCalculator;
 import com.david.zsombok.duedatecalculator.enums.Day;
 import com.david.zsombok.duedatecalculator.enums.Month;
@@ -13,7 +12,7 @@ public class DueDateCalculatorApp {
 		
 		final String ANSI_RED = "\033[0;31m";
 		DueDateCalculator dueDateCalculator = new DueDateCalculator();
-		String dueDate = dueDateCalculator.calculateDueDate(2022, Month.DEC, 31, Day.THU, 4, 55, PartOfDay.PM, 9);
+		String dueDate = dueDateCalculator.calculateDueDate(2001, Month.DEC, 28, Day.THU, 2, 36, PartOfDay.PM, 11);
 		System.out.println(ANSI_RED + "OUTPUT: " + dueDate);
 	}
 	
